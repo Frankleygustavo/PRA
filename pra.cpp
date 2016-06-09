@@ -25,6 +25,29 @@ struct Individuo {
 
 
 };
+struct aviao{
+char prefixo[5];
+char modelo[4];};
+
+struct voo{
+char origem[4];
+char destino[4];
+int partida[2];
+int chegada[2];};
+
+struct aeroporto{
+char nome[4];
+vector<aviao> AvioesEmSolo;
+vector<voo> VoosSaindo;};
+
+struct emVoo{
+vector<aviao> noAr;
+int numAvioesNoAr;};
+
+int rel[2];
+
+
+
 
 vector<Individuo> individuos;
 vector<Individuo> aux;
