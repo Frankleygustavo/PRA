@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 
+
 using namespace std;
 
 
@@ -32,8 +33,9 @@ char modelo[4];};
 struct voo{
 char origem[4];
 char destino[4];
-int partida[2];
-int chegada[2];};
+int partida[3];
+int chegada[3];
+char modelo[5];};
 
 struct aeroporto{
 char nome[4];
@@ -44,13 +46,80 @@ struct emVoo{
 vector<aviao> noAr;
 int numAvioesNoAr;};
 
-int rel[2];
 
 
+int rel[3]={0,0,0};
 
-
+vector<aeroporto> bases;
 vector<Individuo> individuos;
 vector<Individuo> aux;
+vector<aviao> naoAlocado;
+emVoo decolados;
+
+bool vooSaiAgora(voo v){
+    if(v.partida[0]==rel[0]&&v.partida[1]==rel[1]&&v.partida[2]==rel[2]) return true;
+    return false;
+}
+
+bool aviaoDoModeloAAlocar(char m[4]){
+    for(int i=0;i<naoAlocado.size();++i)if(strcmp(naoAlocado[i].modelo,m)==0)return true;
+    return false;
+}
+
+aviao AlocarAviaoDisponivel(char m[4]){
+    aviao res;
+    for(int i=0;i<naoAlocado.size();++i){
+            if(strcmp(naoAlocado[i].modelo,m)==0){
+                res= naoAlocado[i];
+                if(rand()%2){
+                        naoAlocado.erase(naoAlocado.begin()+i);
+                        return res;
+                }
+            }
+    }
+    return res;
+}
+
+void alocarAviaoAleatorio(aeroporto a ,voo v){
+
+    if(!aviaoDoModeloAAlocar(v.modelo)){
+        int numAv=a.AvioesEmSolo.size(), aleat;
+        aleat=rand()%numAv;
+        if(a.AvioesEmSolo[aleat].modelo==v.modelo){
+            decolados.noAr.push_back(a.AvioesEmSolo[aleat]);
+            decolados.numAvioesNoAr++;
+            a.AvioesEmSolo.erase(a.AvioesEmSolo.begin()+aleat);
+        }
+    }
+    else{
+        aviao av=AlocarAviaoDisponivel(v.modelo);
+           decolados.noAr.push_back(av);
+           decolados.numAvioesNoAr++;
+        }
+    }
+
+
+void cria_individuo(){
+    while(rel[0]<7&&rel[1]<24&&rel[2]<60){
+            for(int i=0;i<bases.size();++i){
+                for(int j=0;j<bases[i].VoosSaindo.size();++j){
+                    if(vooSaiAgora(bases[i].VoosSaindo[j])){
+                        alocarAviaoAleatorio(bases[i], bases[i].VoosSaindo[j]);
+
+                        // atualizar individuo com o voo bases[i].VoosSaindo[j] e com o avião decolados.noAr.end();
+
+                        //receber pouso;
+
+                        //incrementar o relogio;
+                    }
+                }
+            }
+
+    }
+}
+
+
+
 
 
 void iniciaParametros() {
